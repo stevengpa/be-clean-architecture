@@ -1,6 +1,9 @@
 {
-  "watch": ["StarWarsApp"],
-  "ext": ".ts,.js",
+  "watch": [
+    "StarWarsApp",
+    "src"
+  ],
+  "ext": ".ts",
   "ignore": ["node_modules"],
-  "exec": "ts-node ./StarWarsApp/main.ts"
+  "exec": "ts-node ./main.ts"
 }
