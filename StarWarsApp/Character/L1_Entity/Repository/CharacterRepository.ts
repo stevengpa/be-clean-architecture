@@ -1,5 +1,6 @@
-import { Character } from "../Character";
+import {SearchAllCharacterResponse} from "./SearchAllCharacterResponse";
+import {Page} from "../../../Shared/L1_Entity/Page/ValueObject/Page";
 
 export interface CharacterRepository {
-  searchAll(): Promise<Array<Character>>;
+    searchAll(page: Page): Promise<SearchAllCharacterResponse>;
 }

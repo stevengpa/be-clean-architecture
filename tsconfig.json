@@ -69,7 +69,7 @@
     "forceConsistentCasingInFileNames": true        /* Disallow inconsistently-cased references to the same file. */
   },
   "include": [
-    "StarWarsApp/**/*.ts"
+    "StarWarsApp"
   ],
   "exclude": [
     "node_modules",

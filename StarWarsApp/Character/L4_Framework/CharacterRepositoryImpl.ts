@@ -1,10 +1,19 @@
-import {CharacterRepository} from "../L1_Entity/Repository/CharacterRepository";
+// L1
 import {Character} from "../L1_Entity/Character";
-import {ApiRepository} from "../../Shared/L4_Framework/API/ApiRepository";
-import {AxiosRepository} from "../../Shared/L4_Framework/API/AxiosRepository";
-import {CharacterFactory} from "../L1_Entity/Repository/CharacterFactory";
-import {CharacterFactoryImpl} from "./CharacterFactoryImpl";
+import {CharacterFactory} from "../L1_Entity/Factory/CharacterFactory";
 import {ExtractCharacterId} from "../L1_Entity/Utils/ExtractCharacterId";
+import {SearchAllCharacterResponse} from "../L1_Entity/Repository/SearchAllCharacterResponse";
+import {CharacterRepository} from "../L1_Entity/Repository/CharacterRepository";
+
+import {Count} from "../../Shared/L1_Entity/Count/ValueObject/Count";
+import {Page} from "../../Shared/L1_Entity/Page/ValueObject/Page";
+// L3
+import {ApiRepository} from "../../Shared/L3_InterfaceAdapters/API/ApiRepository";
+// L4
+import {AxiosRepository} from "../../Shared/L4_Framework/API/AxiosRepository";
+
+import {CharacterFactoryImpl} from "./CharacterFactoryImpl";
+
 
 export class CharacterRepositoryImpl implements CharacterRepository {
     #baseUrl: string = 'https://swapi.dev/api'
@@ -12,21 +21,35 @@ export class CharacterRepositoryImpl implements CharacterRepository {
     #apiRepository: ApiRepository = new AxiosRepository();
     #characterFactory: CharacterFactory = new CharacterFactoryImpl();
 
-    private extractCharacterId(value: string): number {
-        return new ExtractCharacterId(value).extractCharacterId();
+    public searchAll(page: Page): Promise<SearchAllCharacterResponse> {
+        return this.#apiRepository
+            .get(`${this.#baseUrl}/people/?page=${page.value}`)
+            .then(response => response?.data)
+            .then(({ count, results }: { count: number, results: Array<any> }) => {
+                const characters: Array<Character> = this.convertResultsToCharacters(results);
+                return this.createSearchAllCharacterResponse(count, characters);
+            })
     }
 
-    public searchAll(): Promise<Array<Character>> {
-        return this.#apiRepository
-            .get(`${this.#baseUrl}/people/`)
-            .then(response => response?.data?.results)
-            .then(characters =>
-                characters.map(({url, name, birth_year}: { url: string, name: string, birth_year: string}) =>
-                this.#characterFactory.create(
-                    this.extractCharacterId(url),
-                    name,
-                    birth_year
-                )
-            ))
+    private fromPrimitiveToCharacter(url: string, name: string, birthYear: string): Character {
+        return this.#characterFactory.create(
+            new ExtractCharacterId(url).extractCharacterId(),
+            name,
+            birthYear
+        )
+    }
+
+    private convertResultsToCharacters(results: Array<any>): Array<Character> {
+        return results.map(
+            ({url, name, birth_year}: { url: string, name: string, birth_year: string}) =>
+                this.fromPrimitiveToCharacter(url, name, birth_year)
+        )
+    }
+
+    private createSearchAllCharacterResponse(count: number, characters: Array<Character>): SearchAllCharacterResponse {
+        return new SearchAllCharacterResponse(
+            new Count(count),
+            characters
+        )
     }
 }

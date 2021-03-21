@@ -17,14 +17,6 @@ export class Character {
     this.#birthYear = birthYear;
   }
 
-  public toPrimitive(): object {
-    return {
-      id: this.#id.value,
-      name: this.#name.value,
-      birthYear: this.#birthYear.value
-    }
-  }
-
   get id(): CharacterId {
     return this.#id;
   }
