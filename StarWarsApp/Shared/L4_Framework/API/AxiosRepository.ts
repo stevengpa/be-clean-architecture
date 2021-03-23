@@ -1,5 +1,5 @@
 import axios from "axios";
-import {ApiRepository} from "../../L3_InterfaceAdapters/API/ApiRepository";
+import {ApiRepository} from "../../L3_InterfaceAdapters/Adapters/API/ApiRepository";
 
 export class AxiosRepository implements ApiRepository {
     public get(url: string, config?: any): Promise<any> {

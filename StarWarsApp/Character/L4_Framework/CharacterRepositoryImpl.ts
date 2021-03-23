@@ -8,7 +8,7 @@ import {CharacterRepository} from "../L1_Entity/Repository/CharacterRepository";
 import {Count} from "../../Shared/L1_Entity/Count/ValueObject/Count";
 import {Page} from "../../Shared/L1_Entity/Page/ValueObject/Page";
 // L3
-import {ApiRepository} from "../../Shared/L3_InterfaceAdapters/API/ApiRepository";
+import {ApiRepository} from "../../Shared/L3_InterfaceAdapters/Adapters/API/ApiRepository";
 // L4
 import {AxiosRepository} from "../../Shared/L4_Framework/API/AxiosRepository";
 
@@ -51,5 +51,8 @@ export class CharacterRepositoryImpl implements CharacterRepository {
             new Count(count),
             characters
         )
+    }
+
+    saveAsFavorite(character: Character) {
     }
 }

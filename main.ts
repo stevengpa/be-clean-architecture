@@ -2,7 +2,7 @@
 import {CharacterFactory} from "./StarWarsApp/Character/L1_Entity/Factory/CharacterFactory";
 import {CharacterRepository} from "./StarWarsApp/Character/L1_Entity/Repository/CharacterRepository";
 // #L3
-import {SearchAllCharacterController} from "./StarWarsApp/Character/L3_InterfaceAdapters/Controllers/SearchAllCharacterController";
+import {SearchAllCharacterController} from "./StarWarsApp/Character/L3_InterfaceAdapters/Controllers/SearchAllCharacter/SearchAllCharacterController";
 // L4
 import {CharacterRepositoryImpl} from "./StarWarsApp/Character/L4_Framework/CharacterRepositoryImpl";
 import {CharacterFactoryImpl} from "./StarWarsApp/Character/L4_Framework/CharacterFactoryImpl";

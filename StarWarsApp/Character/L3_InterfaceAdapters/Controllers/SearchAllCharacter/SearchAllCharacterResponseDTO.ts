@@ -1,4 +1,4 @@
-export class SearchAllCharactersResponseDTO {
+export class SearchAllCharacterResponseDTO {
     #count: number = 0;
     #characters: Array<object> = [];
 
