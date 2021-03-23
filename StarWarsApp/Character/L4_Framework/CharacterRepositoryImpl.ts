@@ -13,6 +13,8 @@ import {ApiRepository} from "../../Shared/L3_InterfaceAdapters/Adapters/API/ApiR
 import {AxiosRepository} from "../../Shared/L4_Framework/API/AxiosRepository";
 
 import {CharacterFactoryImpl} from "./CharacterFactoryImpl";
+import {CharacterGateway} from "../L3_InterfaceAdapters/Gateways/CharacterGateway";
+import {CharacterStorageImpl} from "./CharacterStorageImpl";
 
 
 export class CharacterRepositoryImpl implements CharacterRepository {
@@ -20,6 +22,7 @@ export class CharacterRepositoryImpl implements CharacterRepository {
 
     #apiRepository: ApiRepository = new AxiosRepository();
     #characterFactory: CharacterFactory = new CharacterFactoryImpl();
+    #characterStorage: CharacterGateway = new CharacterStorageImpl();
 
     public searchAll(page: Page): Promise<SearchAllCharacterResponse> {
         return this.#apiRepository
@@ -54,5 +57,10 @@ export class CharacterRepositoryImpl implements CharacterRepository {
     }
 
     saveAsFavorite(character: Character) {
+        this.#characterStorage.saveAsFavorite(
+          character.id.value,
+          character.name.value,
+          character.birthYear.value
+        )
     }
 }

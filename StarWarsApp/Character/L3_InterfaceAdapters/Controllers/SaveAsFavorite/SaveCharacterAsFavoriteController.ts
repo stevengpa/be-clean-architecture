@@ -4,9 +4,7 @@ import {CharacterFactory} from "../../../L1_Entity/Factory/CharacterFactory";
 // L2
 import {SaveCharacterAsFavorite} from "../../../L2_Application/UseCases/SaveAsFavorite/SaveCharacterAsFavorite";
 
-import {SaveCharacterAsFavoriteRepository} from "./Repository/SaveCharacterAsFavoriteRepository";
-
-export class SaveCharacterAsFavoriteController implements SaveCharacterAsFavoriteRepository {
+export class SaveCharacterAsFavoriteController {
   #saveCharacterAsFavoriteUseCase: SaveCharacterAsFavorite;
   #characterFactory: CharacterFactory;
 
@@ -18,6 +16,6 @@ export class SaveCharacterAsFavoriteController implements SaveCharacterAsFavorit
   async saveCharacterAsFavorite(id: number, name: string, birthYear: string): Promise<void> {
     const character = this.#characterFactory.create(id, name, birthYear);
 
-    return this.#saveCharacterAsFavoriteUseCase.saveAsFavorite(character);
+    await this.#saveCharacterAsFavoriteUseCase.saveAsFavorite(character);
   }
 }

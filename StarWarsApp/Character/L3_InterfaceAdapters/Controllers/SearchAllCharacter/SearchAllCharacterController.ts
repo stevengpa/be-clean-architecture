@@ -7,11 +7,10 @@ import {CharacterFactory} from "../../../L1_Entity/Factory/CharacterFactory";
 
 // L2
 import {SearchAllCharacters} from "../../../L2_Application/UseCases/SearchAll/SearchAllCharacters";
-import {SearchAllCharacterRepository} from "./Repository/SearchAllCharacterRepository";
 
 import {SearchAllCharacterResponseDTO} from "./SearchAllCharacterResponseDTO";
 
-export class SearchAllCharacterController implements SearchAllCharacterRepository {
+export class SearchAllCharacterController {
     #searchAllCharactersUseCase: SearchAllCharacters;
     #characterFactory: CharacterFactory
 
