@@ -11,15 +11,7 @@ export class SearchAllCharacterResponseDTO {
         return this.#count;
     }
 
-    set count(value: number) {
-        this.#count = value;
-    }
-
     get characters(): Array<object> {
         return this.#characters;
-    }
-
-    set characters(value: Array<object>) {
-        this.#characters = value;
     }
 }

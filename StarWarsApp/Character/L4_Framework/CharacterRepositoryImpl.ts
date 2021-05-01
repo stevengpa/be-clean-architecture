@@ -15,6 +15,7 @@ import {AxiosRepository} from "../../Shared/L4_Framework/API/AxiosRepository";
 import {CharacterFactoryImpl} from "./CharacterFactoryImpl";
 import {CharacterGateway} from "../L3_InterfaceAdapters/Gateways/CharacterGateway";
 import {CharacterStorageImpl} from "./CharacterStorageImpl";
+import {GetAllFavoriteCharactersResponse} from "../L1_Entity/Repository/GetAllFavoriteCharactersResponse";
 
 
 export class CharacterRepositoryImpl implements CharacterRepository {
@@ -24,30 +25,16 @@ export class CharacterRepositoryImpl implements CharacterRepository {
     #characterFactory: CharacterFactory = new CharacterFactoryImpl();
     #characterStorage: CharacterGateway = new CharacterStorageImpl();
 
-    public searchAll(page: Page): Promise<SearchAllCharacterResponse> {
+    public async searchAll(page: Page): Promise<SearchAllCharacterResponse> {
         return this.#apiRepository
             .get(`${this.#baseUrl}/people/?page=${page.value}`)
             .then(response => response?.data)
             .then(({ count, results }: { count: number, results: Array<any> }) => {
-                const characters: Array<Character> = this.convertResultsToCharacters(results);
+                const characters: Array<Character> = this.#characterFactory.fromPrimitiveSourceToCharacters(results);
                 return this.createSearchAllCharacterResponse(count, characters);
             })
     }
 
-    private fromPrimitiveToCharacter(url: string, name: string, birthYear: string): Character {
-        return this.#characterFactory.create(
-            new ExtractCharacterId(url).extractCharacterId(),
-            name,
-            birthYear
-        )
-    }
-
-    private convertResultsToCharacters(results: Array<any>): Array<Character> {
-        return results.map(
-            ({url, name, birth_year}: { url: string, name: string, birth_year: string}) =>
-                this.fromPrimitiveToCharacter(url, name, birth_year)
-        )
-    }
 
     private createSearchAllCharacterResponse(count: number, characters: Array<Character>): SearchAllCharacterResponse {
         return new SearchAllCharacterResponse(
@@ -56,11 +43,18 @@ export class CharacterRepositoryImpl implements CharacterRepository {
         )
     }
 
-    saveAsFavorite(character: Character) {
+    public async saveAsFavorite(character: Character) {
         this.#characterStorage.saveAsFavorite(
           character.id.value,
           character.name.value,
           character.birthYear.value
         )
+    }
+
+    public async getAllFavorite(): Promise<GetAllFavoriteCharactersResponse> {
+        const primitiveFavoriteCharacters = this.#characterStorage.getAllFavorite();
+        const characters: Array<Character> = this.#characterFactory.fromPrimitiveToCharacters(primitiveFavoriteCharacters)
+
+        return new GetAllFavoriteCharactersResponse(characters)
     }
 }

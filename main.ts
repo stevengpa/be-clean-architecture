@@ -6,7 +6,9 @@ import {SearchAllCharacterController} from "./StarWarsApp/Character/L3_Interface
 // L4
 import {CharacterRepositoryImpl} from "./StarWarsApp/Character/L4_Framework/CharacterRepositoryImpl";
 import {CharacterFactoryImpl} from "./StarWarsApp/Character/L4_Framework/CharacterFactoryImpl";
-import {SaveCharacterAsFavoriteController} from "./StarWarsApp/Character/L3_InterfaceAdapters/Controllers/SaveAsFavorite/SaveCharacterAsFavoriteController";
+import {SaveCharacterAsFavoriteController} from "./StarWarsApp/Character/L3_InterfaceAdapters/Controllers/SaveCharacterAsFavorite/SaveCharacterAsFavoriteController";
+import {GetAllFavoriteCharactersController} from "./StarWarsApp/Character/L3_InterfaceAdapters/Controllers/GetAllFavoriteCharacters/GetAllFavoriteCharactersController";
+import {GetAllFavoriteCharactersDTO} from "./StarWarsApp/Character/L3_InterfaceAdapters/Controllers/GetAllFavoriteCharacters/GetAllFavoriteCharactersDTO";
 
 async function searchAllCharacter() {
   try {
@@ -18,7 +20,7 @@ async function searchAllCharacter() {
 
     const response = await searchAllCharacter.searchAllCharacter(1);
 
-    console.log('Characters');
+    console.log('Search All Characters');
     console.log(response.characters);
     console.log(`Count: ${response.count}`);
 
@@ -40,13 +42,35 @@ async function saveCharacterAsFavorite() {
     await saveCharacterAsFavorite.saveCharacterAsFavorite(1, "Batman", '1980');
     await saveCharacterAsFavorite.saveCharacterAsFavorite(2, "Robin", '1990');
 
-    // console.log('Characters');
-    // console.log(response.characters);
-    // console.log(`Count: ${response.count}`);
-
+    console.log('Creating Batman and Robin Characters');
   } catch (err) {
     console.error(err.message);
   }
 }
 
 saveCharacterAsFavorite();
+
+
+async function getAllFavoriteCharacters() {
+  try {
+    const characterRepository: CharacterRepository = new CharacterRepositoryImpl();
+    const characterFactory: CharacterFactory = new CharacterFactoryImpl();
+
+    const favoriteCharacterController: GetAllFavoriteCharactersController =
+      new GetAllFavoriteCharactersController(characterRepository, characterFactory)
+
+    const favoriteCharacter: GetAllFavoriteCharactersDTO = await favoriteCharacterController.getAllFavoriteCharacters()
+
+    console.log('Favorite Characters');
+    console.log(favoriteCharacter.characters);
+
+  } catch (err) {
+    console.error(err.message);
+  }
+}
+
+// getAllFavoriteCharacters();
+
+// saveCharacterAsFavorite()
+//   .then(() => getAllFavoriteCharacters())
+//   .catch((err: Error) => err.message);
